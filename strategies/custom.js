@@ -1,9 +1,9 @@
 // If you want to use your own trading methods you can
 // write them here. For more information on everything you
 // can use please refer to this document:
-// 
+//
 // https://github.com/askmike/gekko/blob/stable/docs/trading_methods.md
-// 
+//
 // The example below is pretty stupid: on every new candle there is
 // a 10% chance it will recommand to change your position (to either
 // long or short).
@@ -27,7 +27,8 @@ strat.update = function(candle) {
   this.randomNumber = Math.random();
 
   // There is a 10% chance it is smaller than 0.1
-  this.toUpdate = randomNumber < 0.1;
+  this.toUpdate = this.lastPrice > 1060 || this.lastPrice < 930
+
 }
 
 // For debugging purposes.
@@ -45,13 +46,13 @@ strat.check = function() {
   if(!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long') {
+  if(this.currentTrend === 'long' && this.lastPrice > 1060) {
 
     // If it was long, set it to short
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else {
+  } else if(this.currentTrend === "short" && this.lastPrice < 930){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

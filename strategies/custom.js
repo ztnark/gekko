@@ -27,7 +27,7 @@ strat.update = function(candle) {
   this.randomNumber = Math.random();
 
   // There is a 10% chance it is smaller than 0.1
-  this.toUpdate = this.lastPrice > 1060 || this.lastPrice < 930
+  this.toUpdate = this.lastPrice > settings.short || this.lastPrice < settings.long
 
 }
 
@@ -46,13 +46,13 @@ strat.check = function() {
   if(!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long' && this.lastPrice > 1060) {
+  if(this.currentTrend === 'long' && this.lastPrice > settings.short) {
 
     // If it was long, set it to short
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else if(this.currentTrend === "short" && this.lastPrice < 930){
+  } else if(this.currentTrend === "short" && this.lastPrice < settings.long){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

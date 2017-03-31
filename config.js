@@ -2,8 +2,6 @@
 // @link https://github.com/askmike/gekko/blob/stable/docs/advanced_usage/plugins.md
 require('dotenv').config()
 
-console.log(process.env.KEY)
-
 var config = {};
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -266,15 +264,15 @@ config.mailer = {
 
 config.pushbullet = {
     // sends pushbullets if true
-  enabled: false,
+  enabled: true,
     // Send 'Gekko starting' message if true
   sendMessageOnStart: true,
     // disable advice printout if it's soft
-  muteSoft: true,
+  muteSoft: false,
     // your pushbullet API key
-  key: 'xxx',
+  key: process.env.PBKEY,
     // your email, change it unless you are Azor Ahai
-  email: 'jon_snow@westeros.org',
+  email: 'alldigitalshop@gmail.com',
     // will make Gekko messages start mit [GEKKO]
   tag: '[GEKKO]'
 };

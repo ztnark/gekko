@@ -209,6 +209,8 @@ if(ENV !== 'child-process') {
 }
 
 Base.prototype.propogateTick = function(candle) {
+  this.candle = candle;
+
   this.update(candle);
 
   var isAllowedToCheck = this.requiredHistory <= this.age;

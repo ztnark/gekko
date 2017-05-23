@@ -255,7 +255,6 @@ Manager.prototype.checkOrder = function() {
     if(!filled) {
       log.info(this.action, 'order was not (fully) filled, cancelling and creating new order');
       this.exchange.cancelOrder(_.last(this.orders), _.bind(handleCancelResult, this));
-
       return;
     }
 

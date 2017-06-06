@@ -256,7 +256,10 @@ Manager.prototype.noteOrder = function(err, order) {
 
 
 Manager.prototype.cancelLastOrder = function(done) {
-  this.exchange.cancelOrder(_.last(this.orders), () => {
+  this.exchange.cancelOrder(_.last(this.orders), alreadyFilled => {
+    if(alreadyFilled)
+      return this.relayOrder(done);
+
     this.orders = [];
     done();
   });
@@ -277,7 +280,9 @@ Manager.prototype.checkOrder = function() {
     this.relayOrder();
   }
 
-  var handleCancelResult = function() {
+  var handleCancelResult = function(alreadyFilled) {
+    if(alreadyFilled)
+      return;
     this.trade(this.action, true);
   }
 
@@ -296,7 +301,7 @@ Manager.prototype.convertPortfolio = function(portfolio) {
   }
 }
 
-Manager.prototype.relayOrder = function() {
+Manager.prototype.relayOrder = function(done) {
   // look up all executed orders and relay average.
   var process = (err, res) => {
 
@@ -325,6 +330,9 @@ Manager.prototype.relayOrder = function() {
       });
 
       this.orders = [];
+
+      if(_.isFunction(done))
+        done();
     });
 
   }

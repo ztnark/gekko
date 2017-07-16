@@ -133,6 +133,7 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 Trader.prototype.getPortfolio = function(callback) {
   var args = _.toArray(arguments);
   var set = function(err, data) {
+    console.log(err);
     if(_.isEmpty(data))
       err = 'no data';
 
@@ -193,6 +194,7 @@ Trader.prototype.addOrder = function(tradeType, amount, price, callback) {
   log.debug(tradeType.toUpperCase(), amount, this.asset, '@', price, this.currency);
 
   var set = function(err, data) {
+    console.log(err);
     if(_.isEmpty(data))
       err = 'no data';
 

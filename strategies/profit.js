@@ -1,12 +1,14 @@
 //
 // https://github.com/askmike/gekko/blob/stable/docs/trading_methods.md
 //
-
+var fs = require('fs');
+var parse = require('csv-parse');
+var inputFile='../profit/eth/price.csv';
 var config = require('../core/util.js').getConfig();
-var settings = config.custom;
+var settings = config.profit;
 
 var strat = {};
-
+var target;
 // Prepare everything our method needs
 strat.init = function() {
   this.currentTrend = 'short';
@@ -16,12 +18,17 @@ strat.init = function() {
 // What happens on every new candle?
 strat.update = function(candle) {
 
-  // Get a random number between 0 and 1.
-  this.randomNumber = Math.random();
+  fs.readFile(inputFile, function (err, data) {
+    parse(data, {delimiter: ','}, function(err, rows) {
+          target = rows[0][11]
+//          console.log(rows[rows.length - 1][8])
+//          console.log(rows[rows.length - 1][9])
+//          console.log(rows[rows.length - 1][11])
+    })
+  })
+  this.toUpdate = this.lastPrice > target && this.currentTrend === 'long' || this.lastPrice < target && this.currentTrend === 'short';
 
-  // There is a 10% chance it is smaller than 0.1
-  this.toUpdate = this.lastPrice > settings.short || this.lastPrice < settings.long
-
+  console.log("target:  " + target + " last: " + this.lastPrice)	
 }
 
 // For debugging purposes.
@@ -39,13 +46,13 @@ strat.check = function() {
   if(!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long' && this.lastPrice > settings.short) {
+  if(this.currentTrend === 'long' && this.lastPrice > target) {
 
     // If it was long, set it to short
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else if(this.currentTrend === "short" && this.lastPrice < settings.long){
+  } else if(this.currentTrend === "short" && this.lastPrice < target){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

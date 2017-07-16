@@ -4,7 +4,7 @@
 const CONFIG = {
   api: {
     ssl: false,
-    host: 'localhost',
+    host: '104.198.182.217',
     port: 3000,
     path: '/'
   }

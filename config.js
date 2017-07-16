@@ -19,7 +19,7 @@ config.watch = {
   // see https://github.com/askmike/gekko#supported-exchanges
   exchange: 'kraken',
   currency: 'USD',
-  asset: 'XBT'
+  asset: 'ETH'
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,7 +28,7 @@ config.watch = {
 
 config.tradingAdvisor = {
   enabled: true,
-  method: 'custom',
+  method: 'profit',
   candleSize: 1,
   historySize: 0,
   adapter: 'sqlite',
@@ -165,8 +165,8 @@ config.StochRSI = {
 
 // custom settings:
 config.custom = {
-  short: 1055,
-  long: 950
+  short: 1155,
+  long: 1050
 }
 
 config['talib-macd'] = {

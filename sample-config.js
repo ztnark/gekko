@@ -18,7 +18,12 @@ config.watch = {
   // see https://github.com/askmike/gekko#supported-exchanges
   exchange: 'poloniex',
   currency: 'USDT',
-  asset: 'BTC'
+  asset: 'BTC',
+
+  // You can set your own tickrate (refresh rate).
+  // If you don't set it, the defaults are 2 sec for
+  // okcoin and 20 sec for all other exchanges.
+  // tickrate: 20
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,7 +202,9 @@ config.paperTrader = {
   // how much fee in % does each trade cost?
   fee: 0.25,
   // how much slippage/spread should Gekko assume per trade?
-  slippage: 0.05
+  slippage: 0.05,
+  // what is the risk free return in % (to calculate sharpe ratio)
+  riskFreeReturn: 5
 }
 
 // Want Gekko to perform real trades on buy or sell advice?
@@ -358,6 +365,8 @@ config.postgresql = {
   path: 'plugins/postgresql',
   version: 0.1,
   connectionString: 'postgres://user:pass@localhost:5432', // if default port
+  database: null, // if set, we'll put all tables into a single database.
+  schema: 'public',
   dependencies: [{
     module: 'pg',
     version: '6.1.0'

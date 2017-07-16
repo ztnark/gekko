@@ -17,10 +17,10 @@ Reader.prototype.mostRecentWindow = function mostRecentWindow (from, to, next) {
   var mFrom = from.unix();
   var mTo = to.unix();
 
-  var maxAmount = to - from + 1;
+  var maxAmount = mTo - mFrom + 1;
 
   // Find some documents
-  this.collection.find({ pair: this.pair, start: { $gte: mFrom, $lte: mTo } }).sort({ start: 1 }, (err, docs) => {
+  this.collection.find({ pair: this.pair, start: { $gte: mFrom, $lte: mTo } }).sort({ start: -1 }, (err, docs) => {
     if (err) {
       return util.die('DB error at `mostRecentWindow`');
     }
@@ -98,7 +98,7 @@ Reader.prototype.getBoundry = function getBoundry (next) {
     }
     var start = _.first(docs).start;
 
-    collection.find({ pair: this.pair }, { start: 1 }).sort({ start: -1 }).limit(1, (err2, docs2) => {
+    this.collection.find({ pair: this.pair }, { start: 1 }).sort({ start: -1 }).limit(1, (err2, docs2) => {
       if (err2) {
         return util.die('DB error at `getBoundry`');
       }
@@ -110,13 +110,7 @@ Reader.prototype.getBoundry = function getBoundry (next) {
 }
 
 Reader.prototype.tableExists = function(name, next) {
-  this.db.getCollectionNames((err, names) => {
-    if (err) {
-      log.debug(err);
-      return util.die('DB error at `tableExists`');
-    }
-    next(null, names.indexOf(name) > -1);
-  });
+  return next(null, true); // Return true for backtest
 }
 
 Reader.prototype.close = function close () {

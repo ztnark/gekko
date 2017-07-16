@@ -91,6 +91,8 @@ var Base = function() {
   this.asyncTick = false;
   this.candlePropsCacheSize = 1000;
 
+  this._prevAdvice;
+
   this.candleProps = {
     open: [],
     high: [],
@@ -110,12 +112,6 @@ var Base = function() {
 
   // let's run the implemented starting point
   this.init();
-
-  // should be set up now, check some things
-  // to make sure everything is implemented
-  // correctly.
-  if(!this.name)
-    log.warn('Warning, trading method has no name');
 
   if(!config.debug || !this.log)
     this.log = function() {};
@@ -160,7 +156,7 @@ Base.prototype.tick = function(candle) {
 
   // update the trading method
   if(!this.asyncTick || this.requiredHistory > this.age) {
-    this.propogateTick();
+    this.propogateTick(candle);
   } else {
     var next = _.after(
       _.size(this.talibIndicators),
@@ -176,7 +172,7 @@ Base.prototype.tick = function(candle) {
 
       // fn is bound to indicator
       this.result = _.mapValues(result, v => _.last(v));
-      next();
+      next(candle);
     }
 
     // handle result from talib
@@ -208,8 +204,8 @@ if(ENV !== 'child-process') {
   }
 }
 
-Base.prototype.propogateTick = function() {
-  this.update(this.candle);
+Base.prototype.propogateTick = function(candle) {
+  this.update(candle);
 
   var isAllowedToCheck = this.requiredHistory <= this.age;
 
@@ -218,13 +214,13 @@ Base.prototype.propogateTick = function() {
   // whether candle start time is > startTime
   var isPremature;
   if(mode === 'realtime')
-    isPremature = this.candle.start < startTime;
+    isPremature = candle.start < startTime;
   else
     isPremature = false;
 
   if(isAllowedToCheck && !isPremature) {
-    this.log();
-    this.check(this.candle);
+    this.log(candle);
+    this.check(candle);
   }
   this.processedTicks++;
 
@@ -266,18 +262,22 @@ Base.prototype.addIndicator = function(name, type, parameters) {
 }
 
 Base.prototype.advice = function(newPosition) {
-  var advice = 'soft';
-  if(newPosition) {
-    advice = newPosition;
-  }
+  // ignore soft advice coming from legacy
+  // strategies.
+  if(!newPosition)
+    return;
 
-  let candle = this.candle;
-  candle.start = candle.start.clone();
+  // ignore if advice equals previous advice
+  if(newPosition === this._prevAdvice)
+    return;
+
+  this._prevAdvice = newPosition;
+
   _.defer(function() {
     this.emit('advice', {
-      recommendation: advice,
+      recommendation: newPosition,
       portfolio: 1,
-      candle
+      candle: this.candle
     });
   }.bind(this));
 }

@@ -42,3 +42,4 @@ history
 TMP_*
 .idea
 .env
+volumes

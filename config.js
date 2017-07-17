@@ -1,6 +1,7 @@
 // Everything is explained here:
 // @link https://github.com/askmike/gekko/blob/stable/docs/advanced_usage/plugins.md
 require('dotenv').config()
+process.env.UV_THREADPOOL_SIZE = 128;
 
 var config = {};
 
@@ -30,7 +31,7 @@ config.watch = {
 config.tradingAdvisor = {
   enabled: true,
   method: 'profit',
-  candleSize: 1,
+  candleSize: 2,
   historySize: 0,
   adapter: 'sqlite',
   talib: {
@@ -295,6 +296,16 @@ config.telegrambot = {
   token: 'YOUR_TELEGRAM_BOT_TOKEN',
   botName: 'gekkobot'
 }
+
+config.twitter = {
+    // sends pushbullets if true
+  enabled: false,
+    // Send 'Gekko starting' message if true
+  sendMessageOnStart: true,
+    // disable advice printout if it's soft
+  muteSoft: false,
+  tag: '[GEKKO]'
+};
 
 config.xmppbot = {
   enabled: false,

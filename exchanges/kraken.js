@@ -159,6 +159,7 @@ Trader.prototype.getFee = function(callback) {
 
 Trader.prototype.getTicker = function(callback) {
   var set = function(err, data) {
+    console.log(err);
     if(_.isEmpty(data))
       err = 'no data';
 
@@ -229,6 +230,7 @@ Trader.prototype.sell = function(amount, price, callback) {
 
 Trader.prototype.checkOrder = function(order, callback) {
   var check = function(err, data) {
+    console.log(err)
     if(_.isEmpty(data))
       err = 'no data';
 
@@ -248,6 +250,7 @@ Trader.prototype.checkOrder = function(order, callback) {
 
 Trader.prototype.cancelOrder = function(order) {
   var cancel = function(err, data) {
+    console.log(err);
     if(_.isEmpty(data))
       err = 'no data';
     

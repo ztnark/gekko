@@ -11,7 +11,7 @@ var strat = {};
 var target;
 // Prepare everything our method needs
 strat.init = function() {
-  this.currentTrend = 'short';
+  this.currentTrend;
   this.requiredHistory = 0;
 }
 
@@ -26,7 +26,7 @@ strat.update = function(candle) {
 //          console.log(rows[rows.length - 1][11])
     })
   })
-  this.toUpdate = this.lastPrice > target && this.currentTrend === 'long' || this.lastPrice < target && this.currentTrend === 'short';
+  this.toUpdate = this.lastPrice > target && this.currentTrend != 'short' || this.lastPrice < target && this.currentTrend != 'long';
 
   console.log("target:  " + target + " last: " + this.lastPrice)	
 }
@@ -46,13 +46,13 @@ strat.check = function() {
   if(!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long' && this.lastPrice > target) {
+  if(this.currentTrend != 'short' && this.lastPrice > target) {
 
     // If it was long, set it to short
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else if(this.currentTrend === "short" && this.lastPrice < target){
+  } else if(this.currentTrend != "long" && this.lastPrice < target){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

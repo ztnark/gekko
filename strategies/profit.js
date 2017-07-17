@@ -52,7 +52,7 @@ strat.check = function() {
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else if(this.currentTrend != "long" && this.lastPrice < target){
+  } else if(this.currentTrend != "long" && this.lastPrice < target * 0.99){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

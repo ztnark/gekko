@@ -137,8 +137,8 @@ Trader.prototype.getPortfolio = function(callback) {
     if(_.isEmpty(data))
       err = 'no data';
 
-    if(!_.isEmpty(data.error))
-      err = data.error;
+    //if(!_.isEmpty(data.error))
+     // err = data.error;
 
     if (err)
       return this.retry(this.getPortfolio, args, JSON.stringify(err));
@@ -163,8 +163,8 @@ Trader.prototype.getTicker = function(callback) {
     if(_.isEmpty(data))
       err = 'no data';
 
-    if(!_.isEmpty(data.error))
-      err = data.error;
+    //if(!_.isEmpty(data.error))
+     //err = data.error;
 
     if (err)
       return log.error('unable to get ticker', JSON.stringify(err));
@@ -199,8 +199,8 @@ Trader.prototype.addOrder = function(tradeType, amount, price, callback) {
     if(_.isEmpty(data))
       err = 'no data';
 
-    if(!_.isEmpty(data.error))
-      err = data.error;
+    //if(!_.isEmpty(data.error))
+     // err = data.error;
 
     if (err)
       return log.error('unable to', tradeType.toLowerCase(), JSON.stringify(err));
@@ -234,8 +234,8 @@ Trader.prototype.checkOrder = function(order, callback) {
     if(_.isEmpty(data))
       err = 'no data';
 
-    if(!_.isEmpty(data.error))
-      err = data.error;
+    //if(!_.isEmpty(data.error))
+     // err = data.error;
 
     if(err)
       return log.error('Unable to check order', order, JSON.stringify(err));
@@ -254,8 +254,8 @@ Trader.prototype.cancelOrder = function(order) {
     if(_.isEmpty(data))
       err = 'no data';
     
-    if(!_.isEmpty(data.error))
-      err = data.error;
+    //if(!_.isEmpty(data.error))
+     // err = data.error;
 
     if(err)
       log.error('unable to cancel order', order, '(', err, JSON.stringify(err), ')');

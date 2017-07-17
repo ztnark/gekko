@@ -9,7 +9,7 @@ var config = {};
 //                          GENERAL SETTINGS
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-config.debug = false; // for additional logging / debugging
+config.debug = true; // for additional logging / debugging
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                         WATCHING A MARKET
@@ -17,11 +17,23 @@ config.debug = false; // for additional logging / debugging
 
 config.watch = {
 
+<<<<<<< HEAD:config.js
   // see https://github.com/askmike/gekko#supported-exchanges
   exchange: 'kraken',
   currency: 'USD',
   asset: 'ETH'
 
+=======
+  // see https://gekko.wizb.it/docs/introduction/supported_exchanges.html
+  exchange: 'poloniex',
+  currency: 'USDT',
+  asset: 'BTC',
+
+  // You can set your own tickrate (refresh rate).
+  // If you don't set it, the defaults are 2 sec for
+  // okcoin and 20 sec for all other exchanges.
+  // tickrate: 20
+>>>>>>> b4b5efce12838b36918e1c5209af42d84efca491:sample-config.js
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -202,7 +214,10 @@ config.paperTrader = {
   fee: 0.25,
   // how much slippage/spread should Gekko assume per trade?
   slippage: 0.05,
-  // what is the risk free return in % (to calculate sharpe ratio)
+}
+
+config.performanceAnalyzer = {
+  enabled: true,
   riskFreeReturn: 5
 }
 
@@ -210,10 +225,18 @@ config.paperTrader = {
 // Enabling this will activate trades for the market being
 // watched by `config.watch`.
 config.trader = {
+<<<<<<< HEAD:config.js
   enabled: true,
   key: process.env.KEY,
   secret: process.env.SECRET,
   username: '' // your username, only required for specific exchanges.
+=======
+  enabled: false,
+  key: '',
+  secret: '',
+  username: '', // your username, only required for specific exchanges.
+  passphrase: '' // GDAX, requires a passphrase.
+>>>>>>> b4b5efce12838b36918e1c5209af42d84efca491:sample-config.js
 }
 
 config.adviceLogger = {
@@ -363,10 +386,7 @@ config.sqlite = {
   dataDirectory: 'history',
   version: 0.1,
 
-  dependencies: [{
-    module: 'sqlite3',
-    version: '3.1.4'
-  }]
+  dependencies: []
 }
 
   // Postgres adapter example config (please note: requires postgres >= 9.5):

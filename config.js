@@ -18,10 +18,10 @@ config.debug = true; // for additional logging / debugging
 config.watch = {
 
   // see https://github.com/askmike/gekko#supported-exchanges
-  exchange: 'kraken',
+  exchange: 'gdax',
   currency: 'USD',
   asset: 'ETH',
-  tickrate: 60
+  tickrate: 120
 
 }
 
@@ -32,7 +32,7 @@ config.watch = {
 config.tradingAdvisor = {
   enabled: true,
   method: 'profit',
-  candleSize: 2,
+  candleSize: 1,
   historySize: 0,
   adapter: 'sqlite',
   talib: {
@@ -215,10 +215,10 @@ config.performanceAnalyzer = {
 // watched by `config.watch`.
 config.trader = {
   enabled: true,
-  key: process.env.KEY,
-  secret: process.env.SECRET,
+  key: process.env.GDAX_KEY,
+  secret: process.env.GDAX_SECRET,
   username: '', // your username, only required for specific exchanges.
-  passphrase: '' // GDAX, requires a passphrase.
+  passphrase: process.env.GDAX_PASSPHRASE // GDAX, requires a passphrase.
 }
 
 config.adviceLogger = {

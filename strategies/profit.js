@@ -6,6 +6,7 @@ var parse = require('csv-parse');
 var inputFile='../profit/eth/price.csv';
 var config = require('../core/util.js').getConfig();
 var settings = config.profit;
+var log = require('../core/log');
 
 var strat = {};
 var target;
@@ -33,8 +34,6 @@ strat.update = function(candle) {
 
 // For debugging purposes.
 strat.log = function() {
-  log.write('calculated random number:');
-  log.write('\t', this.randomNumber.toFixed(3));
 }
 
 // Based on the newly calculated

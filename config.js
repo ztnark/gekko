@@ -273,9 +273,9 @@ config.mailer = {
 
 config.pushbullet = {
     // sends pushbullets if true
-  enabled: false,
+  enabled: true,
     // Send 'Gekko starting' message if true
-  sendMessageOnStart: true,
+  sendMessageOnStart: false,
     // disable advice printout if it's soft
   muteSoft: false,
     // your pushbullet API key

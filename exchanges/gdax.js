@@ -66,7 +66,7 @@ Trader.prototype.getPortfolio = function(callback) {
         var portfolio = data.map(function (account) {
                 return {
                     name: account.currency.toUpperCase(),
-                    amount: parseFloat(account.available)
+                    amount: parseFloat(account.available).toFixed(6)
                 }
             }
         );
@@ -95,7 +95,7 @@ Trader.prototype.buy = function(amount, price, callback) {
     var args = _.toArray(arguments);
     var buyParams = {
         'price': price,
-        'size': amount,
+        'size': amount.toFixed(6),
         'product_id': this.pair,
         'post_only': this.post_only
     };

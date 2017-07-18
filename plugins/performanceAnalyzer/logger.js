@@ -19,7 +19,7 @@ const Logger = function(watchConfig) {
 }
 
 Logger.prototype.round = function(amount) {
-  return amount.toFixed(8);
+  return amount;
 }
 
 Logger.prototype.handleStartBalance = function() {

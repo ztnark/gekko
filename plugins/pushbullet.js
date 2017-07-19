@@ -31,7 +31,7 @@ Pushbullet.prototype.setup = function(done){
             var title = pushbulletConfig.tag;
             var exchange = config.watch.exchange;
             var currency = config.watch.currency;
-            var asset = config.watch.asset;
+	    var asset = config.watch.asset;
             var body = "Gekko has started, Ive started watching "
                 +exchange
                 +" "
@@ -40,8 +40,8 @@ Pushbullet.prototype.setup = function(done){
                 +asset
 		+" target: "
 		+this.target
-                +" I'll let you know when I got some advice"
-                +JSON.stringify(this.manager.portfolio);
+                +" balance: "
+	     	this.balanceString();
             this.mail(title, body);
         }else{
             log.debug('Skipping Send message on startup')
@@ -49,6 +49,14 @@ Pushbullet.prototype.setup = function(done){
     };
     setupPushBullet.call(this)
 };
+
+Pushbullet.prototype.balanceString = function(){
+     var string = ""
+     _.each(this.manager.portfolio, function(obj) {
+        string +=  " " + obj.name + ": " +  parseFloat(obj.amount) + " ";
+    });
+    return string;
+}
 
 Pushbullet.prototype.processCandle = function(candle, done) {
     this.price = candle.close;
@@ -70,7 +78,7 @@ Pushbullet.prototype.processAdvice = function(advice) {
 	' target is ',
 	this.target,
         ' balance is ',
-        JSON.stringify(this.manager.portfolio)
+        this.balanceString()
     ].join('');
 
     var subject = pushbulletConfig.tag+' New advice: go ' + advice.recommendation;

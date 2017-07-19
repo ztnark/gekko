@@ -4,6 +4,8 @@ var util = require('../core/util.js');
 var config = util.getConfig();
 var twitterConfig = config.twitter;
 var TwitterApi = require('twitter');
+var Manager = require('./trader/portfolioManager');
+
 require('dotenv').config()
 
 var Twitter = function(done) {
@@ -11,10 +13,17 @@ var Twitter = function(done) {
 
     this.twitter;
     this.price = 'N/A';
-
+    this.manager = new Manager(_.extend(config.trader, config.watch));
+    this.manager.init(this.setup);
     this.done = done;
-    this.setup();
 };
+
+Twitter.prototype.balanceString = function(){
+     var string = ""
+     _.each(this.manager.portfolio, function(obj) {
+        string += "Currency: " + obj.currency + " Balance: " +  parseFloat(obj.amount) + " ";
+    });	
+}
 
 Twitter.prototype.setup = function(done){
 

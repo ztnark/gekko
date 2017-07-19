@@ -20,8 +20,7 @@ config.watch = {
   // see https://github.com/askmike/gekko#supported-exchanges
   exchange: 'gdax',
   currency: 'USD',
-  asset: 'ETH',
-  tickrate: 120
+  asset: 'ETH'
 
 }
 
@@ -168,8 +167,8 @@ config.StochRSI = {
 
 // custom settings:
 config.custom = {
-  short: 1155,
-  long: 1050
+  short: 200,
+  long: 300
 }
 
 config['talib-macd'] = {

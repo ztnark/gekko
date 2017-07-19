@@ -9,12 +9,16 @@ var util = require('../core/util.js');
 var config = util.getConfig();
 var pushbulletConfig = config.pushbullet;
 var Manager = require('./trader/portfolioManager');
+var fs = require('fs');
+var inputFile='../profit/eth/target.json';
 
 var Pushbullet = function(done) {
     _.bindAll(this);
 
     this.pusher;
     this.price = 'N/A';
+    var obj = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
+    this.target = obj.prediction;
     this.manager = new Manager(_.extend(config.trader, config.watch));
     this.manager.init(this.setup);
     this.done = done;
@@ -34,6 +38,8 @@ Pushbullet.prototype.setup = function(done){
                 +currency
                 +" "
                 +asset
+		+" target: "
+		+this.target
                 +" I'll let you know when I got some advice"
                 +JSON.stringify(this.manager.portfolio);
             this.mail(title, body);
@@ -52,7 +58,6 @@ Pushbullet.prototype.processCandle = function(candle, done) {
 
 Pushbullet.prototype.processAdvice = function(advice) {
 	if (advice.recommendation == "soft" && pushbulletConfig.muteSoft) return;
-
 	var text = [
         'Gekko is watching ',
         config.watch.exchange,
@@ -62,6 +67,8 @@ Pushbullet.prototype.processAdvice = function(advice) {
         config.watch.asset,
         ' price is ',
         this.price,
+	' target is ',
+	this.target,
         ' balance is ',
         JSON.stringify(this.manager.portfolio)
     ].join('');

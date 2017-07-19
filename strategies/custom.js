@@ -26,8 +26,8 @@ strat.update = function(candle) {
 
 // For debugging purposes.
 strat.log = function() {
-  log.write('calculated random number:');
-  log.write('\t', this.randomNumber.toFixed(3));
+//  log.write('calculated random number:');
+//  log.write('\t', this.randomNumber.toFixed(3));
 }
 
 // Based on the newly calculated
@@ -39,13 +39,13 @@ strat.check = function() {
   if(!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long' && this.lastPrice > settings.short) {
+  if(this.currentTrend === 'long' && this.lastPrice > settings.long) {
 
     // If it was long, set it to short
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else if(this.currentTrend === "short" && this.lastPrice < settings.long){
+  } else if(this.currentTrend === "short" && this.lastPrice > settings.short){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

@@ -66,7 +66,7 @@ Trader.prototype.getPortfolio = function(callback) {
         var portfolio = data.map(function (account) {
                 return {
                     name: account.currency.toUpperCase(),
-                    amount: parseFloat(account.available).toFixed(6)
+                    amount: (parseFloat(account.available)*0.997).toFixed(6)
                 }
             }
         );

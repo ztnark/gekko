@@ -275,7 +275,7 @@ config.pushbullet = {
     // sends pushbullets if true
   enabled: true,
     // Send 'Gekko starting' message if true
-  sendMessageOnStart: false,
+  sendMessageOnStart: true,
     // disable advice printout if it's soft
   muteSoft: false,
     // your pushbullet API key

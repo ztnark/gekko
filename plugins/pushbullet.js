@@ -8,15 +8,16 @@ var log = require('../core/log.js');
 var util = require('../core/util.js');
 var config = util.getConfig();
 var pushbulletConfig = config.pushbullet;
+var Manager = require('./trader/portfolioManager');
 
 var Pushbullet = function(done) {
     _.bindAll(this);
 
     this.pusher;
     this.price = 'N/A';
-
+    this.manager = new Manager(_.extend(config.trader, config.watch));
+    this.manager.init(this.setup);
     this.done = done;
-    this.setup();
 };
 
 Pushbullet.prototype.setup = function(done){
@@ -33,7 +34,8 @@ Pushbullet.prototype.setup = function(done){
                 +currency
                 +" "
                 +asset
-                +" I'll let you know when I got some advice";
+                +" I'll let you know when I got some advice"
+                +JSON.stringify(this.manager.portfolio);
             this.mail(title, body);
         }else{
             log.debug('Skipping Send message on startup')
@@ -59,7 +61,9 @@ Pushbullet.prototype.processAdvice = function(advice) {
         '.\n\nThe current ',
         config.watch.asset,
         ' price is ',
-        this.price
+        this.price,
+        ' balance is ',
+        JSON.stringify(this.manager.portfolio)
     ].join('');
 
     var subject = pushbulletConfig.tag+' New advice: go ' + advice.recommendation;

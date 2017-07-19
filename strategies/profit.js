@@ -3,7 +3,7 @@
 //
 var fs = require('fs');
 var parse = require('csv-parse');
-var inputFile='../profit/eth/price.csv';
+var inputFile='../profit/eth/target.json';
 var config = require('../core/util.js').getConfig();
 var settings = config.profit;
 var log = require('../core/log');
@@ -18,15 +18,8 @@ strat.init = function() {
 
 // What happens on every new candle?
 strat.update = function(candle) {
-
-  fs.readFile(inputFile, function (err, data) {
-    parse(data, {delimiter: ','}, function(err, rows) {
-          target = rows[0][11]
-//          console.log(rows[rows.length - 1][8])
-//          console.log(rows[rows.length - 1][9])
-//          console.log(rows[rows.length - 1][11])
-    })
-  })
+  var obj = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
+  target = obj.prediction
   this.toUpdate = this.lastPrice > target && this.currentTrend != 'short' || this.lastPrice < target && this.currentTrend != 'long';
 
   console.log("target:  " + target + " last: " + this.lastPrice)	

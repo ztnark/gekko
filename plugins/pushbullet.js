@@ -8,39 +8,60 @@ var log = require('../core/log.js');
 var util = require('../core/util.js');
 var config = util.getConfig();
 var pushbulletConfig = config.pushbullet;
+var Manager = require('./trader/portfolioManager');
+var fs = require('fs');
+var inputFile='../profit/eth/target.json';
 
 var Pushbullet = function(done) {
     _.bindAll(this);
 
     this.pusher;
     this.price = 'N/A';
-
+    this.manager = new Manager(_.extend(config.trader, config.watch));
+    this.manager.init(this.setup);
     this.done = done;
-    this.setup();
 };
 
 Pushbullet.prototype.setup = function(done){
-
+    var balance = this.balanceString();
     var setupPushBullet = function (err, result) {
         if(pushbulletConfig.sendMessageOnStart){
             var title = pushbulletConfig.tag;
             var exchange = config.watch.exchange;
             var currency = config.watch.currency;
-            var asset = config.watch.asset;
+	    var target = this.getTarget();
+	    var asset = config.watch.asset;
             var body = "Gekko has started, Ive started watching "
                 +exchange
                 +" "
                 +currency
                 +" "
                 +asset
-                +" I'll let you know when I got some advice";
-            this.mail(title, body);
+		+" target: "
+		+target
+                +" balance: "
+	     	+balance;
+	    this.mail(title, body);
         }else{
             log.debug('Skipping Send message on startup')
         }
     };
     setupPushBullet.call(this)
 };
+
+Pushbullet.prototype.balanceString = function(){
+     var string = ""
+     _.each(this.manager.portfolio, function(obj) {
+        string +=  " " + obj.name + ": " +  parseFloat(obj.amount) + " ";
+    });
+    return string;
+}
+
+Pushbullet.prototype.getTarget = function(){
+    var obj = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
+    var target = obj.prediction;
+    return target;
+}
 
 Pushbullet.prototype.processCandle = function(candle, done) {
     this.price = candle.close;
@@ -50,7 +71,8 @@ Pushbullet.prototype.processCandle = function(candle, done) {
 
 Pushbullet.prototype.processAdvice = function(advice) {
 	if (advice.recommendation == "soft" && pushbulletConfig.muteSoft) return;
-
+	var target = this.getTarget();
+	var balance = this.balanceString();
 	var text = [
         'Gekko is watching ',
         config.watch.exchange,
@@ -59,7 +81,11 @@ Pushbullet.prototype.processAdvice = function(advice) {
         '.\n\nThe current ',
         config.watch.asset,
         ' price is ',
-        this.price
+        this.price,
+	' target is ',
+	target,
+        ' balance is ',
+        JSON.stringify(this.manager.portfolio)
     ].join('');
 
     var subject = pushbulletConfig.tag+' New advice: go ' + advice.recommendation;

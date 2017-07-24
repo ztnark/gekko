@@ -305,9 +305,9 @@ config.telegrambot = {
 
 config.twitter = {
     // sends pushbullets if true
-  enabled: false,
+  enabled: true,
     // Send 'Gekko starting' message if true
-  sendMessageOnStart: false,
+  sendMessageOnStart: true,
     // disable advice printout if it's soft
   muteSoft: false,
   tag: '[GEKKO]'

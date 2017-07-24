@@ -95,7 +95,7 @@ Trader.prototype.buy = function(amount, price, callback) {
     var args = _.toArray(arguments);
     var buyParams = {
         'price': price,
-        'size': amount,
+        'size': amount.toFixed(6),
         'product_id': this.pair,
         'post_only': this.post_only
     };
@@ -184,8 +184,9 @@ Trader.prototype.cancelOrder = function(order, callback) {
     }
 
     var result = function(err, response, data) {
-        // todo..
-        callback();
+      this.getPortfolio(function(){
+          callback();
+      });
     };
 
     this.gdax.cancelOrder(order, result);

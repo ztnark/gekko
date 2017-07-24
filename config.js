@@ -167,8 +167,7 @@ config.StochRSI = {
 
 // custom settings:
 config.custom = {
-  short: 200,
-  long: 300
+  target: 250
 }
 
 config['talib-macd'] = {
@@ -219,7 +218,8 @@ config.trader = {
   key: process.env.GDAX_KEY,
   secret: process.env.GDAX_SECRET,
   username: '', // your username, only required for specific exchanges.
-  passphrase: process.env.GDAX_PASSPHRASE // GDAX, requires a passphrase.
+  passphrase: process.env.GDAX_PASSPHRASE, // GDAX, requires a passphrase.
+  post_only: true
 }
 
 config.adviceLogger = {

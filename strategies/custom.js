@@ -1,21 +1,15 @@
-// This is a basic example strategy for Gekko.
-// For more information on everything please refer
-// to this document:
 //
-// https://gekko.wizb.it/docs/strategies/creating_a_strategy.html
+// https://github.com/askmike/gekko/blob/stable/docs/trading_methods.md
 //
-// The example below is pretty bad investment advice: on every new candle there is
-// a 10% chance it will recommend to change your position (to either
-// long or short).
 
-var log = require('../core/log');
+var config = require('../core/util.js').getConfig();
+var settings = config.custom;
 
-// Let's create our own strat
 var strat = {};
 
 // Prepare everything our method needs
 strat.init = function() {
-  this.currentTrend = 'long';
+  this.currentTrend;
   this.requiredHistory = 0;
 }
 
@@ -23,16 +17,16 @@ strat.init = function() {
 strat.update = function(candle) {
 
   // Get a random number between 0 and 1.
-  this.randomNumber = Math.random();
+  //this.randomNumber = Math.random();
 
   // There is a 10% chance it is smaller than 0.1
-  this.toUpdate = this.randomNumber < 0.1;
+  this.toUpdate = true;
 }
 
 // For debugging purposes.
 strat.log = function() {
-  log.debug('calculated random number:');
-  log.debug('\t', this.randomNumber.toFixed(3));
+//  log.write('calculated random number:');
+//  log.write('\t', this.randomNumber.toFixed(3));
 }
 
 // Based on the newly calculated
@@ -44,13 +38,13 @@ strat.check = function() {
   if(!this.toUpdate)
     return;
 
-  if(this.currentTrend === 'long') {
+  if(this.currentTrend != 'short' && this.lastPrice > settings.target) {
 
     // If it was long, set it to short
     this.currentTrend = 'short';
     this.advice('short');
 
-  } else {
+  } else if(this.currentTrend != "long" && this.lastPrice < settings.target){
 
     // If it was short, set it to long
     this.currentTrend = 'long';

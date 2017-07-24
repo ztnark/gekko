@@ -2,8 +2,10 @@ var _ = require('lodash');
 var log = require('../core/log.js');
 var util = require('../core/util.js');
 var config = util.getConfig();
+var fs = require('fs');
 var twitterConfig = config.twitter;
 var TwitterApi = require('twitter');
+var TwitterMedia = require('twitter-media');
 var Manager = require('./trader/portfolioManager');
 
 require('dotenv').config()
@@ -29,7 +31,14 @@ Twitter.prototype.setup = function(done){
           access_token_key: process.env.TWITTER_ACCESS_TOKEN,
           access_token_secret: process.env.TWITTER_TOKEN_SECRET
         });
-      
+
+	this.mediaClient = new TwitterMedia({
+	  consumer_key: process.env.TWITTER_KEY,
+          consumer_secret: process.env.TWITTER_SECRET,
+          token: process.env.TWITTER_ACCESS_TOKEN,
+          token_secret: process.env.TWITTER_TOKEN_SECRET
+	});
+	
         if(twitterConfig.sendMessageOnStart){
             var balance = this.balanceString();
 	    var exchange = config.watch.exchange;
@@ -55,6 +64,15 @@ Twitter.prototype.processCandle = function(candle, done) {
 
     done();
 };
+
+Twitter.prototype.uploadMedia = function(cb){
+    fs.readFile("../profit/eth/test.png", function (err, data) {
+        if (err) throw err;
+	this.mediaClient.uploadMedia('image',data,function(err,res){
+	    cb(res);
+	})    
+    }.bind(this));
+}
 
 Twitter.prototype.processAdvice = function(advice) {
         this.manager.setPortfolio(function(){
@@ -101,13 +119,15 @@ Twitter.prototype.balanceString = function(){
 
 Twitter.prototype.mail = function(content, done) {
     log.info("trying to tweet");
-    this.client.post('statuses/update', {status: content},  function(error, tweet, response) {
-      if(error || !response) {
-         log.error('Pushbullet ERROR:', error)
-      } else if(response && response.active){
-          log.info('Pushbullet Message Sent')
-      }
-    }); 
+    this.uploadMedia(function(mediaId){
+      this.client.post('statuses/update', {status: content, media_ids: mediaId},  function(error, tweet, response) {
+        if(error || !response) {
+           log.error('Twitter ERROR:', error)
+        } else if(response && response.active){
+           log.info('Twitter Message Sent')
+        }
+      });
+    }.bind(this)); 
 };
 
 Twitter.prototype.checkResults = function(err) {

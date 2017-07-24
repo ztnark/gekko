@@ -187,7 +187,7 @@ Trader.prototype.cancelOrder = function(order, callback) {
       this.getPortfolio(function(){
           callback();
       });
-    };
+    }.bind(this);
 
     this.gdax.cancelOrder(order, result);
 }

@@ -307,7 +307,7 @@ config.twitter = {
     // sends pushbullets if true
   enabled: true,
     // Send 'Gekko starting' message if true
-  sendMessageOnStart: true,
+  sendMessageOnStart: false,
     // disable advice printout if it's soft
   muteSoft: false,
   tag: '[GEKKO]'

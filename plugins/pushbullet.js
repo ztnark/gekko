@@ -23,7 +23,7 @@ var Pushbullet = function(done) {
 };
 
 Pushbullet.prototype.setup = function(done){
-    var balance = this.balanceString();
+    this.manager.setPortfoilio(this.balanceString).bind(this);
     var setupPushBullet = function (err, result) {
         if(pushbulletConfig.sendMessageOnStart){
             var title = pushbulletConfig.tag;

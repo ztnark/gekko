@@ -3,6 +3,7 @@ var log = require('../core/log.js');
 var util = require('../core/util.js');
 var config = util.getConfig();
 var fs = require('fs');
+var inputFile='../profit/eth/target.json';
 var twitterConfig = config.twitter;
 var TwitterApi = require('twitter');
 var TwitterMedia = require('twitter-media');
@@ -44,14 +45,16 @@ Twitter.prototype.setup = function(done){
 	    var exchange = config.watch.exchange;
             var currency = config.watch.currency;
             var asset = config.watch.asset;
+	    var target = this.getTarget();
             var body = "#Ethereum trade bot is watching "
-                +exchange
-                +" "
-                +currency
-                +" "
                 +asset
-		+". Current balance: "
-		+balance
+		+'. Current '
+                +'price is $'
+                +this.price
+                +' (Target: $'
+                +parseFloat(target).toFixed(2)
+                +') Balance: '
+                +balance
             this.mail(body);
         }else{
             log.debug('Skipping Send message on startup')
@@ -80,21 +83,19 @@ Twitter.prototype.processAdvice = function(advice) {
         })
         var sendMessage = function(){
             if (advice.recommendation == "soft" && pushbulletConfig.muteSoft) return;
-           // var target = this.getTarget();
+            var target = this.getTarget();
             var balance = this.balanceString();
             var text = [
             '#Ethereum trade bot is attempting to ',
             advice.recommendation === "short" ? "sell" : "buy",
-            '.\n\nThe current ',
-            config.watch.asset,
-            ' price is ',
+            '. Current ',
+            'price is $',
             this.price,
-//            ' target is ',
-  //          target,
-            ' balance is ',
+            ' (Target: $',
+            parseFloat(target).toFixed(2),
+            ') Balance: ',
             balance
             ].join('');
-            var subject =' New advice: go ' + advice.recommendation;
             this.mail(text);
         }.bind(this);
 };
@@ -115,6 +116,12 @@ Twitter.prototype.balanceString = function(){
     var percent = ((total/557-1)*100).toFixed(2);
     var formattedPercent = percent > 0 ? "+" + percent + "%" : "-" + percent + "%";
     return string + " (" + usd + " " + formattedPercent + ")";
+}
+
+Twitter.prototype.getTarget = function(){
+    var obj = JSON.parse(fs.readFileSync(inputFile, 'utf8'));
+    var target = obj.prediction;
+    return target;
 }
 
 Twitter.prototype.mail = function(content, done) {

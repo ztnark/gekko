@@ -54,20 +54,10 @@ Pushbullet.prototype.setup = function(done){
 
 Pushbullet.prototype.balanceString = function(){
      var string = ""
-     var total = 0
-     var price = this.price
      _.each(this.manager.portfolio, function(obj) {
-        string +=  " " + obj.name + ": " +  parseFloat(obj.amount).toFixed(2) + " ";
-	if(obj.name === "USD"){
-	    total += parseFloat(obj.amount);
-	}else{
-	    total += parseFloat(obj.amount) * price
-	}
+        string +=  " " + obj.name + ": " +  parseFloat(obj.amount) + " ";
     });
-    var usd = "$" + total.toFixed(2);
-    var percent = ((total/557-1)*100).toFixed(2);
-    var formattedPercent = percent > 0 ? "+" + percent + "%" : "-" + percent + "%";
-    return string + " (" + usd + " " + formattedPercent + ")";
+    return string;
 }
 
 Pushbullet.prototype.getTarget = function(){
@@ -83,33 +73,27 @@ Pushbullet.prototype.processCandle = function(candle, done) {
 };
 
 Pushbullet.prototype.processAdvice = function(advice) {
-	this.manager.setPortfolio(function(){
-	    sendMessage();
-	})
-	var sendMessage = function(){
+	if (advice.recommendation == "soft" && pushbulletConfig.muteSoft) return;
+	var target = this.getTarget();
+	var balance = this.balanceString();
+	var text = [
+        'Gekko is watching ',
+        config.watch.exchange,
+        ' and has detected a new trend, advice is to go ',
+        advice.recommendation,
+        '.\n\nThe current ',
+        config.watch.asset,
+        ' price is ',
+        this.price,
+	' target is ',
+	target,
+        ' balance is ',
+        JSON.stringify(this.manager.portfolio)
+    ].join('');
 
-  	    if (advice.recommendation == "soft" && pushbulletConfig.muteSoft) return;
-	    var target = this.getTarget();
-	    var balance = this.balanceString();
-	    var text = [
-            'Gekko is watching ',
-            config.watch.exchange,
-            ' and has detected a new trend, advice is to go ',
-            advice.recommendation,
-            '.\n\nThe current ',
-            config.watch.asset,
-            ' price is ',
-            this.price,
-	    ' target is ',
-	    target,
-            ' balance is ',
-	    balance
-            ].join('');
+    var subject = pushbulletConfig.tag+' New advice: go ' + advice.recommendation;
 
-   	    var subject = pushbulletConfig.tag+' New advice: go ' + advice.recommendation;
-
-    	    this.mail(subject, text);
-	}.bind(this);
+    this.mail(subject, text);
 };
 
 Pushbullet.prototype.mail = function(subject, content, done) {

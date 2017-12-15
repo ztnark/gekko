@@ -326,6 +326,10 @@ config.twitter = {
   access_token_secret: ''
 };
 
+config.api = {
+  enabled: true
+}
+
 config.xmppbot = {
   enabled: false,
   emitUpdates: false,

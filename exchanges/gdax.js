@@ -18,14 +18,13 @@ var Trader = function(config) {
     this.scanbackResults = [];
     this.asset = config.asset;
     this.currency = config.currency;
-
     if(_.isObject(config)) {
         this.key = config.key;
         this.secret = config.secret;
         this.passphrase = config.passphrase;
 
         this.pair = [config.asset, config.currency].join('-').toUpperCase();
-        this.post_only = (typeof config.post_only !== 'undefined') ? config.post_only : true;
+        this.post_only = false;
     }
 
     this.gdax_public = new Gdax.PublicClient(this.pair, this.use_sandbox ? 'https://api-public.sandbox.gdax.com' : undefined);
@@ -113,8 +112,8 @@ Trader.prototype.normalizeResult = callback => {
 Trader.prototype.buy = function(amount, price, callback) {
     var args = _.toArray(arguments);
     var buyParams = {
-        'price': this.getMaxDecimalsNumber(price, this.currency == 'BTC' ? 5 : 2),
-        'size': this.getMaxDecimalsNumber(amount),
+        'price': this.getMaxDecimalsNumber(price + 1, this.currency == 'BTC' ? 5 : 2),
+        'size': this.getMaxDecimalsNumber(amount * (1-0.005)),
         'product_id': this.pair,
         'post_only': this.post_only
     };
@@ -133,7 +132,7 @@ Trader.prototype.buy = function(amount, price, callback) {
 Trader.prototype.sell = function(amount, price, callback) {
     var args = _.toArray(arguments);
     var sellParams = {
-        'price': this.getMaxDecimalsNumber(price, this.currency == 'BTC' ? 5 : 2),
+        'price': this.getMaxDecimalsNumber(price - 1, this.currency == 'BTC' ? 5 : 2),
         'size': this.getMaxDecimalsNumber(amount),
         'product_id': this.pair,
         'post_only': this.post_only

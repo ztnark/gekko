@@ -24,7 +24,7 @@ var Trader = function(config) {
         this.passphrase = config.passphrase;
 
         this.pair = [config.asset, config.currency].join('-').toUpperCase();
-        this.post_only = false;
+        this.post_only = true;
     }
 
     this.gdax_public = new Gdax.PublicClient(this.pair, this.use_sandbox ? 'https://api-public.sandbox.gdax.com' : undefined);
@@ -112,8 +112,8 @@ Trader.prototype.normalizeResult = callback => {
 Trader.prototype.buy = function(amount, price, callback) {
     var args = _.toArray(arguments);
     var buyParams = {
-        'price': this.getMaxDecimalsNumber(price + 1, this.currency == 'BTC' ? 5 : 2),
-        'size': this.getMaxDecimalsNumber(amount * (1-0.005)),
+        'price': this.getMaxDecimalsNumber(price, this.currency == 'BTC' ? 5 : 2),
+        'size': this.getMaxDecimalsNumber(amount),
         'product_id': this.pair,
         'post_only': this.post_only
     };
@@ -132,7 +132,7 @@ Trader.prototype.buy = function(amount, price, callback) {
 Trader.prototype.sell = function(amount, price, callback) {
     var args = _.toArray(arguments);
     var sellParams = {
-        'price': this.getMaxDecimalsNumber(price - 1, this.currency == 'BTC' ? 5 : 2),
+        'price': this.getMaxDecimalsNumber(price, this.currency == 'BTC' ? 5 : 2),
         'size': this.getMaxDecimalsNumber(amount),
         'product_id': this.pair,
         'post_only': this.post_only

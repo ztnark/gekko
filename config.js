@@ -220,7 +220,7 @@ config.performanceAnalyzer = {
 // Enabling this will activate trades for the market being
 // watched by `config.watch`.
 config.trader = {
-  enabled: false,
+  enabled: true,
   key: process.env.GDAX_KEY,
   secret: process.env.GDAX_SECRET,
   username: '', // your username, only required for specific exchanges.
@@ -310,20 +310,16 @@ config.telegrambot = {
 
 config.twitter = {
     // sends pushbullets if true
-  enabled: false,
+  enabled: true,
     // Send 'Gekko starting' message if true
-  sendMessageOnStart: false,
+  sendMessageOnStart: true,
     // disable advice printout if it's soft
   muteSoft: false,
   tag: '[GEKKO]',
     // twitter consumer key
-  consumer_key: '',
     // twitter consumer secret
-  consumer_secret: '',
     // twitter access token key
-  access_token_key: '',
     // twitter access token secret
-  access_token_secret: ''
 };
 
 config.api = {

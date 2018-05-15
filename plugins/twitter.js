@@ -113,7 +113,7 @@ Twitter.prototype.balanceString = function(){
         }
     });
     var usd = "$" + total.toFixed(2);
-    var percent = ((total/400-1)*100).toFixed(2);
+    var percent = ((total/500-1)*100).toFixed(2);
     var formattedPercent = percent > 0 ? "+" + percent + "%" : "-" + percent + "%";
     return string + " (" + usd + " " + formattedPercent + ")";
 }
